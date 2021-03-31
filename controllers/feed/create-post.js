@@ -1,11 +1,18 @@
 const { validationResult } = require('express-validator');
-const Post = require('../../models/posts');
+const Post = require('../../models/post');
+const User = require('../../models/user');
 const { errorCatch } = require('../../utils/error-catching');
-const { throwValidationError } = require('../../utils/validation-error');
 
 
-exports.createPost = (req, res, next) => {
-  if (!validationResult(req).isEmpty()) throwValidationError();
+exports.createPost = async (req, res, next) => {
+  // validation stuff
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Server side input validation failed.');
+    error.data = errors.array();
+    return next(error);
+  }
+
   // look for an image
   if (!req.file) {
     const error = new Error('No image provided');
@@ -18,16 +25,33 @@ exports.createPost = (req, res, next) => {
     title,
     content,
     imageUrl,
-    creator: { name: 'Jimmy' }
+    creator: req.userId
   });
-  post
-    .save()
-    .then(result => {
-      console.log('Saving', result);
-      res.status(201).json({
-        message: 'Post created successfully.',
-        post: result
-      });
-    })
-    .catch(err => errorCatch(err, next));
+  try {
+    // save post
+    await post.save();
+
+    // retrieve the creator of the post
+    const creator = await User.findById(req.userId);
+
+    // add post to its posts
+    creator.posts.push(post);
+
+    // save back the user
+    await creator.save();
+
+    console.log('Saved post successfully.');
+
+    res.status(201).json({
+      message: 'Post created successfully.',
+      post,
+      creator: {
+        _id: creator._id,
+        name: creator.name
+      }
+    });
+
+  } catch (err) {
+    errorCatch(err, next);
+  }
 }

@@ -1,17 +1,23 @@
-const Post = require('../../models/posts');
+const Post = require('../../models/post');
 const { errorCatch } = require('../../utils/error-catching');
 const { throwNotFoundError } = require('../../utils/db-not-found-error');
 
-exports.getPost = (req, res, next) => {
+exports.getPost = async (req, res, next) => {
   const postId = req.params.postId;
-  Post
-    .findById(postId)
-    .then(post => {
-      if (!post) throwNotFoundError(postId);
-      res.status(200).json({
-        message: `Post ${postId} fetched.`,
-        post
-      });
-    })
-    .catch(err => errorCatch(err, next))
+  try {
+    // get post from db
+    const post = await Post.findById(postId);
+
+    // check if it exists
+    if (!post) throwNotFoundError(postId);
+
+    // send it back to client
+    console.log(`Post ${postId} fetched.`);
+    res.status(200).json({
+      message: `Post ${postId} fetched.`,
+      post
+    });
+  } catch (err) {
+    errorCatch(err, next);
+  }
 }
