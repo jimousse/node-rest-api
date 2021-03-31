@@ -15,6 +15,7 @@ exports.getPosts = async (req, res, next) => {
     // retrieve the right amount of posts
     const posts = await Post
       .find()
+      .populate('creator')
       .skip((currentPage - 1) * PER_PAGE)
       .limit(PER_PAGE);
 
