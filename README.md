@@ -75,7 +75,7 @@ Creates/modifies a social media post for a logged in user and stores it in the u
 ### Get a post
  `GET`: `feed/post/:postId` See [controller](https://github.com/jimousse/node-rest-api/blob/main/controllers/feed/get-post.js).
 
-Creates a social media post for a logged in user and stores it in the user entry.
+Retrieves a social media post for a logged in user.
 - The client sends the following request with the postId as a param:
 ```
 {
@@ -87,6 +87,24 @@ Creates a social media post for a logged in user and stores it in the user entry
 ```
 - the server decodes the token in the header and checks that it is valid and retrieves the user id from it and checks that it's valid
 - gets the post from the database and sends it back to the client
+
+
+
+### Get posts
+ `GET`: `feed/posts` See [controller](https://github.com/jimousse/node-rest-api/blob/main/controllers/feed/get-post.js).
+
+Retrieves all social media posts from all users.
+- The client sends the following request with the postId as a param:
+```
+{
+   "method":"GET",
+   "headers":{
+      "Authorization: "Bearer <user-jwt-token>"
+   }
+}
+```
+- the server decodes the token in the header and checks that it is valid and retrieves the user id from it and checks that it's valid
+- gets the posts from the database and sends them to the client as an array
 
 
 ### Delete a post
