@@ -1,4 +1,4 @@
-# node-rest-api
+# Social media rest API
 
 Simple rest API created using `express` and MongoDB for a social media app.
 
