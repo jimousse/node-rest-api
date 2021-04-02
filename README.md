@@ -55,6 +55,8 @@ Logs in a returning user.
 ### Create/modify a post
  `POST`: `feed/post` See [controller](https://github.com/jimousse/node-rest-api/blob/main/controllers/feed/create-post.js).
 
+`PUT`: `feed/post` (for modify)
+
 Creates/modifies a social media post for a logged in user and stores it in the user entry.
 - The client sends the following request:
 ```
