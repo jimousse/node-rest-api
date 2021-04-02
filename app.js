@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 
@@ -15,7 +16,8 @@ const statusRouter = require('./routes/status');
 
 // db
 const DB_NAME = 'messages';
-const DB_URL = `mongodb://127.0.0.1:27017/${DB_NAME}`;
+const mongoDbServer = fs.readFileSync('mongodb_server.txt', 'utf8');
+const DB_URL = `${mongoDbServer}/${DB_NAME}`;
 
 // app
 const app = express();
