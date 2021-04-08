@@ -38,7 +38,7 @@ exports.createPost = async (req, res, next) => {
     creator.posts.push(post);
 
     // save back the user
-    await creator.save();
+    const savedUser = await creator.save();
 
     console.log('Saved post successfully.');
 
@@ -51,6 +51,7 @@ exports.createPost = async (req, res, next) => {
       }
     });
 
+    return savedUser;
   } catch (err) {
     errorCatch(err, next);
   }

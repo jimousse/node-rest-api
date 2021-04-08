@@ -41,6 +41,8 @@ exports.login = async (req, res, next) => {
       expiresIn: '1h'
     });
   } catch (err) {
-    errorCatch(err, next);
+    if (!err.statusCode) err.statusCode = 500;
+    next(err);
+    return err;
   }
 }
